@@ -2,3 +2,4 @@
 *.b#?
 hardware/CAMOutputs/
 firmware/build/*
+schema_*.zip
