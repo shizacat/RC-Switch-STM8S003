@@ -1,0 +1,4 @@
+*.s#?
+*.b#?
+hardware/CAMOutputs/
+firmware/build/*
