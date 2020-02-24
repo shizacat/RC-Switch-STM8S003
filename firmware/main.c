@@ -1,26 +1,12 @@
 /**
   ******************************************************************************
-  * @file     TIM1_Input_Capture\main.c
-  * @author   MCD Application Team
-  * @version  V2.2.0
-  * @date     30-September-2014
-  * @brief    This file contains the main function for TIM1 Input Capture example.
+  * @file     RC-Switch\main.c
+  * @author   
+  * @version  
+  * @date     
+  * @brief    
   ******************************************************************************
   * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
   *
   ******************************************************************************
   */ 
@@ -28,23 +14,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s.h"
 
-/**
-  * @addtogroup TIM1_Input_Capture
-  * @{
-  */
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-// uint32_t TIM1ClockFreq = 2000000;
-// __IO uint32_t LSIClockFreq = 0;
 uint16_t ICValue1 =0, ICValue2 =0;
 uint8_t state =0;
+
 /* Private function prototypes -----------------------------------------------*/
 static void TIM1_Config(void);
 static void GPIO_Config(void);
 static void CLK_Config(void);
+
 /* Private functions ---------------------------------------------------------*/
 /* Public functions ----------------------------------------------------------*/
 
@@ -58,23 +39,16 @@ void main(void)
 
   /* GPIO CONFIG ----------------------------------------------- */
   GPIO_Config();
-  // GPIO_Init(GPIOE, GPIO_PIN_0, GPIO_MODE_OUT_PP_LOW_FAST);
 
   CLK_Config();
+
   /* TIM1 configuration -----------------------------------------*/
   TIM1_Config();
     
-  /* Compute LSI clock frequency */
-  // LSIClockFreq = (8 * TIM1ClockFreq) / (ICValue2 - ICValue1);
-  
-  //Test
-  // GPIO_WriteLow(GPIOC, GPIO_PIN_3);
-
   /* Insert a break point here */
   while (1)
   {
     if (TIM1_GetFlagStatus(TIM1_FLAG_CC1) == SET) {
-      // GPIO_WriteHigh(GPIOC, GPIO_PIN_3);
       if(state == FALSE)          {
           ICValue1 = TIM1_GetCapture1();
           TIM1_ICInit(
@@ -88,6 +62,7 @@ void main(void)
             TIM1_CHANNEL_1, TIM1_ICPOLARITY_RISING, TIM1_ICSELECTION_DIRECTTI,
             TIM1_ICPSC_DIV1, 0x0
           );
+          // Check threshold
           if ((ICValue2 - ICValue1) >= 80) {
             GPIO_WriteHigh(GPIOC, GPIO_PIN_3);
           } else {
@@ -135,7 +110,7 @@ static void CLK_Config(void){
     CLK_CURRENTCLOCKSTATE_DISABLE
   );
 
-  // Настраиваем переферию
+  // Configure periphery
   CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, DISABLE);
   CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, DISABLE);
   CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
@@ -165,29 +140,8 @@ static void TIM1_Config(void)
     TIM1_ICPSC_DIV1, 0x0
   );
   
-  // /* Enable TIM1 */
+  // Enable TIM1
   TIM1_Cmd(ENABLE);
-
-  // TIM1_ClearFlag(TIM1_FLAG_CC1);
-  // // while((TIM1->SR1 & TIM1_FLAG_CC1) != TIM1_FLAG_CC1);
-  // while(TIM1_GetFlagStatus(TIM1_FLAG_CC1) == SET);
-  // GPIO_WriteHigh(GPIOC, GPIO_PIN_3);
-
-
-  // /* Clear CC1 Flag*/
-  // TIM1_ClearFlag(TIM1_FLAG_CC1);
-  
-  // /* wait a capture on CC1 */
-  // while((TIM1->SR1 & TIM1_FLAG_CC1) != TIM1_FLAG_CC1);
-  // /* Get CCR1 value*/
-  // ICValue1 = TIM1_GetCapture1();
-  // TIM1_ClearFlag(TIM1_FLAG_CC1);
-  
-  // /* wait a capture on cc1 */
-  // while((TIM1->SR1 & TIM1_FLAG_CC1) != TIM1_FLAG_CC1);
-  // /* Get CCR1 value*/
-  // ICValue2 = TIM1_GetCapture1();
-  // TIM1_ClearFlag(TIM1_FLAG_CC1);
 }
 
 #ifdef USE_FULL_ASSERT
@@ -211,9 +165,4 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
-/**
-  * @}
-  */
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/************************ END OF FILE ****/
